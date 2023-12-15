@@ -71,6 +71,18 @@ os.makedirs(storage_folder, exist_ok=True)
 
 # Путь к файлу JSON
 json_file_path = os.path.join(storage_folder, 'data.json')
+if not os.path.isfile(json_file_path):
+    # Создать пустой словарь
+    data = {}
+
+    # Открыть файл JSON для записи
+    with open(json_file_path, 'w') as json_file:
+        # Записать пустой словарь в файл JSON
+        json.dump(data, json_file)
+
+    print(f"Создан файл JSON по пути: {json_file_path}")
+else:
+    print(f"Файл JSON уже существует по пути: {json_file_path}")
 
 def save_to_json(data):
     try:
@@ -79,14 +91,14 @@ def save_to_json(data):
     except (FileNotFoundError, json.decoder.JSONDecodeError):
         existing_data = {}
 
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
     existing_data[timestamp] = data
 
     with open(json_file_path, 'w') as file:
         json.dump(existing_data, file, indent=2)
 
 def run_flask_app():
-    app.run(host='localhost', port=3000)
+    app.run(host='0.0.0.0', port=3000)
 
 def run_socket_server():
     udp_server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
